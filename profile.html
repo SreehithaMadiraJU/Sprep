@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sprep</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="/dist/styles.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script>
+        function handleLogout() {
+            alert("Your account has been logged out.");
+            if (confirm("Your account has been logged out. Click OK to sign in again.")) {
+                window.location.href = "signin.html";
+            }
+        }
+
+        function redirectToHome() {
+            window.location.href = "home.html";
+        }
+
+        function saveProfile() {
+    // Check if the success message already exists
+    let successMessage = document.getElementById('successMessage');
+    if (!successMessage) {
+        // Create the success message element
+        successMessage = document.createElement('div');
+        successMessage.id = 'successMessage';
+        successMessage.className = 'text-green-500 text-center bg-gray-100 p-2 rounded-lg mb-4';
+        successMessage.innerText = "Profile saved successfully!";
+        
+        // Insert the message at the top of the scrollable content
+        const scrollableContent = document.querySelector('.w-full.max-w-lg.bg-white');
+        scrollableContent.insertBefore(successMessage, scrollableContent.firstChild);
+    }
+
+    // Show the message for a few seconds, then remove it
+    setTimeout(() => {
+        if (successMessage) {
+            successMessage.remove();
+        }
+    }, 3000); // Message disappears after 3 seconds
+}
+
+        function loadProfileData() {
+            // Load data from localStorage
+            document.getElementById('firstName').value = localStorage.getItem('fullName') || '';
+            document.getElementById('class').value = localStorage.getItem('selectedClass') || '';
+            document.getElementById('email').value = localStorage.getItem('email') || '';
+
+            // Make the name and email fields non-editable
+            document.getElementById('firstName').readOnly = true;
+            document.getElementById('email').readOnly = true;
+        }
+
+        function saveProfileData() {
+            // Save data to localStorage or any other storage mechanism
+            localStorage.setItem('firstName', document.getElementById('firstName').value);
+            localStorage.setItem('lastName', document.getElementById('lastName').value);
+            localStorage.setItem('nickname', document.getElementById('nickname').value);
+            localStorage.setItem('phoneNumber', document.getElementById('phoneNumber').value);
+            localStorage.setItem('class', document.getElementById('class').value);
+            localStorage.setItem('gender', document.querySelector('input[name="gender"]:checked').value);
+            // Save the updated class to localStorage
+            localStorage.setItem('selectedClass', document.getElementById('class').value);
+
+            alert("Profile updated successfully!");
+        }
+
+        function showProfilePicOptions() {
+            document.getElementById('profilePicOptions').classList.toggle('hidden');
+        }
+
+        document.addEventListener('DOMContentLoaded', loadProfileData);
+    </script>
+</head>
+<body class="bg-gray-100 text-black font-sans">
+    <!-- App Container -->
+    <div class="container min-h-screen flex flex-col items-center justify-between p-4">
+        <!-- Scrollable Content -->
+        <div class="w-full max-w-lg bg-white shadow-md rounded-lg p-6 overflow-y-auto h-[calc(100vh-100px)]">
+            <!-- Header -->
+            <div class="flex justify-between items-center mb-4">
+                <i class="fas fa-arrow-left text-xl cursor-pointer" onclick="redirectToHome()"></i>
+                <h1 class="text-xl font-bold">Profile</h1>
+                <span class="text-blue-500 font-semibold cursor-pointer" onclick="saveProfile(); saveProfileData();">SAVE</span>
+            </div>
+            <!-- Profile Picture -->
+            <div class="flex justify-center mb-4 relative">
+                <img src="Screenshot 2025-04-11 200104.png" alt="Profile Picture" class="rounded-full w-32 h-32 cursor-pointer" onclick="showProfilePicOptions()">
+                <div id="profilePicOptions" class="absolute top-36 bg-white shadow-md rounded-lg p-4 hidden">
+                    <p class="cursor-pointer mb-2">Upload from device</p>
+                    <p class="cursor-pointer">Choose one</p>
+                </div>
+            </div>
+            <!-- Profile Form -->
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <div class="mb-2">
+                    <label class="text-gray-500" for="firstName">First name</label>
+                    <input class="w-full border rounded-lg p-2 bg-gray-200" id="firstName" type="text" readonly/>
+                </div>
+                <div class="mb-2">
+                    <label class="text-gray-500" for="lastName">Last name</label>
+                    <input class="w-full border rounded-lg p-2" id="lastName" type="text"/>
+                </div>
+                <div class="mb-2">
+                    <label class="text-gray-500" for="nickname">Nickname</label>
+                    <input class="w-full border rounded-lg p-2" id="nickname" type="text"/>
+                </div>
+                <div class="mb-2">
+                    <label class="text-gray-500" for="email">Email</label>
+                    <input class="w-full border rounded-lg p-2 bg-gray-200" id="email" type="email" readonly />
+                </div>
+                <div class="mb-2">
+                    <label class="text-gray-500" for="phoneNumber">Phone number</label>
+                    <input class="w-full border rounded-lg p-2" id="phoneNumber" type="text"/>
+                </div>
+                <div class="mb-2">
+                    <label class="text-gray-500" for="class">Which class are you in?</label>
+                    <input class="w-full border rounded-lg p-2" id="class" type="text"/>
+                </div>
+                <div class="mb-2">
+                    <label class="text-gray-500">Gender</label>
+                    <div class="flex space-x-4">
+                        <label class="flex items-center">
+                            <input class="mr-2" name="gender" type="radio" value="Male"/>
+                            Male
+                        </label>
+                        <label class="flex items-center">
+                            <input class="mr-2" name="gender" type="radio" value="Female"/>
+                            Female
+                        </label>
+                        <label class="flex items-center">
+                            <input class="mr-2" name="gender" type="radio" value="Other"/>
+                            Other
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Footer Navigation -->
+        <div class="bg-white shadow-md p-4 flex justify-between items-center w-full max-w-lg">
+            <!-- Play Button -->
+            <a href="maths.html" class="text-xl" title="Lecture">
+                <i class="fas fa-play"></i>
+            </a>
+            <!-- Pencil Button -->
+            <a href="exams.quiz.html" class="text-xl" title="Exams Quiz">
+                <i class="fas fa-pen"></i>
+            </a>
+            <!-- Home Button -->
+            <a href="home.html" class="text-xl" title="Home">
+                <i class="fas fa-home"></i>
+            </a>
+            <!-- Notification with a badge -->
+            <a href="mistakes.html" class="relative text-xl">
+                <i class="fas fa-times-circle"></i>
+                <span class="absolute top-0 right-0 transform -translate-y-1/2 translate-x-1/2 bg-red-600 text-white text-xs rounded-full px-1">3</span>
+            </a>
+            <!-- Profile Button -->
+            <a href="profile.html" class="text-xl" title="Profile">
+                <i class="fas fa-user"></i>
+            </a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Sprep</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="/dist/styles.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+        .container {
+            margin-top: 4rem; /* Adjust this value if needed to ensure space for the fixed status bar */
+        }
+        .hover-button:hover {
+            background-color: #e2e8f0; /* Tailwind's gray-200 */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-black font-sans">
+    <!-- Mobile View Container -->
+    <div class="container min-h-screen flex flex-col items-center justify-center p-4">
+        <div class="w-full max-w-xs bg-white shadow-md rounded-lg p-6">
+            <div class="flex justify-center items-center mb-4 relative">
+                <!-- Arrow button with redirection -->
+                <i class="fas fa-arrow-left text-xl cursor-pointer absolute left-0" onclick="window.location.href='signin.html';"></i>
+                <i class="fas fa-cog text-xl cursor-pointer absolute right-0" onclick="window.location.href='settings.html';"></i>
+                <h1 class="text-xl font-bold">Registration</h1>
+            </div>
+            <div class="mb-4">
+                <label class="block text-lg" for="fullName">Full Name</label>
+                <input class="w-full border rounded-lg p-2" id="fullName" type="text"/>
+            </div>
+            <div class="mb-4">
+                <label class="block text-lg">Course</label>
+                <div class="flex space-x-2">
+                    <button class="border rounded-full px-4 py-1 hover-button" onclick="selectCourse('MPC')" id="courseMPC">MPC</button>
+                    <button class="border rounded-full px-4 py-1 hover-button" onclick="selectCourse('BIPC')" id="courseBIPC">BIPC</button>
+                    <button class="border rounded-full px-4 py-1 hover-button" onclick="selectCourse('MBIPC')" id="courseMBIPC">MBIPC</button>
+                </div>
+            </div>
+            <div class="mb-4">
+                <label class="block text-lg">Which Class are you in</label>
+                <div class="flex space-x-2">
+                    <button class="border rounded-full px-4 py-1 hover-button" onclick="selectClass('11')" id="class11">11</button>
+                    <button class="border rounded-full px-4 py-1 hover-button" onclick="selectClass('12')" id="class12">12</button>
+                    <button class="border rounded-full px-4 py-1 hover-button" onclick="selectClass('Dropper')" id="classDropper">Dropper</button>
+                </div>
+            </div>
+            <div class="mb-4">
+                <label class="block text-lg">Which exam are you currently preparing for?</label>
+                <div class="space-y-2">
+                    <div class="flex items-center">
+                        <input class="mr-2" id="tsEapcet" type="checkbox" title="TS EAPCET"/>
+                        <label for="TS EAPCET">TS EAPCET</label>
+                    </div>
+                    <div class="flex items-center">
+                        <input class="mr-2" id="apEapcet" type="checkbox"/>
+                        <label for="AP EAPCET">AP EAPCET</label>
+                    </div>
+                    <div class="flex items-center">
+                        <input class="mr-2" id="jeeMains" type="checkbox"/>
+                        <label for="JEE MAINS">JEE MAINS</label>
+                    </div>
+                    <div class="flex items-center">
+                        <input class="mr-2" id="jeeAdvance" type="checkbox"/>
+                        <label for="JEE ADVANCE">JEE ADVANCE</label>
+                    </div>
+                    <div class="flex items-center">
+                        <input class="mr-2" id="neetUg" type="checkbox"/>
+                        <label for="NEET-UG">NEET-UG</label>
+                    </div>
+                    <div class="flex items-center">
+                        <input class="mr-2" id="bitsat" type="checkbox"/>
+                        <label for="BITSAT">BITSAT</label>
+                    </div>
+                    <div class="flex items-center">
+                        <input class="mr-2" id="cuetUg" type="checkbox"/>
+                        <label for="CUET-UG">CUET-UG</label>
+                    </div>
+                </div>
+            </div>
+            <button class="w-full bg-black text-white rounded-lg py-2 hover-button" onclick="continueToHome()">CONTINUE</button>
+            
+            <!-- Warning message -->
+            <p id="warningMessage" class="text-red-500 mt-4 hidden">Please fill in all fields and select at least one exam!</p>
+        </div>
+    </div>
+
+    <script>
+        let selectedCourse = '';
+        let selectedClass = '';
+
+        // Function to select a course
+        function selectCourse(course) {
+            selectedCourse = course;
+
+            // Highlight the selected course button
+            document.querySelectorAll('#courseMPC, #courseBIPC, #courseMBIPC').forEach(button => {
+                button.classList.remove('bg-gray-300'); // Remove highlight from all buttons
+            });
+            document.getElementById(`course${course}`).classList.add('bg-gray-300'); // Highlight the selected button
+
+            // Store the selected course in localStorage
+            localStorage.setItem('selectedCourse', course);
+
+            // Update the checkboxes based on the selected course
+            updateCheckboxes();
+        }
+
+        // Function to select a class
+        function selectClass(className) {
+            selectedClass = className;
+
+            // Highlight the selected class button
+            document.querySelectorAll('#class11, #class12, #classDropper').forEach(button => {
+                button.classList.remove('bg-gray-300');
+            });
+            document.getElementById(`class${className}`).classList.add('bg-gray-300');
+
+            // Store the selected class in localStorage
+            localStorage.setItem('selectedClass', className);
+        }
+
+        // Function to update checkboxes based on the selected course
+        function updateCheckboxes() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.disabled = false; // Enable all checkboxes initially
+                checkbox.checked = false; // Uncheck all checkboxes initially
+            });
+
+            if (selectedCourse === 'MPC') {
+                document.getElementById('neetUg').disabled = true; // Disable NEET-UG for MPC
+            } else if (selectedCourse === 'BIPC') {
+                checkboxes.forEach(checkbox => {
+                    if (checkbox.id !== 'neetUg' && checkbox.id !== 'tsEapcet' && checkbox.id !== 'apEapcet') {
+                        checkbox.disabled = true; // Disable all except NEET-UG, TS EAPCET, AP EAPCET
+                    }
+                });
+            }
+        }
+
+        // Function to handle the "Continue" button click
+        function continueToHome() {
+            const warningMessage = document.getElementById('warningMessage');
+            warningMessage.classList.add('hidden'); // Hide previous warnings
+
+            // Get all selected exams
+            const selectedExams = Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(checkbox => {
+                return checkbox.nextElementSibling.textContent.toUpperCase();
+            });
+
+            // Validate inputs
+            if (!selectedCourse || !selectedClass || selectedExams.length === 0) {
+                warningMessage.textContent = "Please fill in all fields and select at least one exam!";
+                warningMessage.classList.remove('hidden'); // Show the warning message
+                warningMessage.scrollIntoView({ behavior: "smooth", block: "center" }); // Ensure it's visible in the view container
+                return;
+            }
+
+            // Store data in localStorage
+            localStorage.setItem('selectedCourse', selectedCourse);
+            localStorage.setItem('selectedClass', selectedClass);
+            localStorage.setItem('selectedExam', JSON.stringify(selectedExams));
+
+            // Redirect to the home page
+            window.location.href = "home.html";
+        }
+
+        // Function to save registration data
+        function saveRegistrationData() {
+            const fullName = document.getElementById('fullName').value;
+            const selectedClass = document.getElementById('class').value;
+
+            // Save data to localStorage
+            localStorage.setItem('fullName', fullName);
+            localStorage.setItem('selectedClass', selectedClass);
+
+            // Redirect to the profile page
+            window.location.href = "profile.html";
+        }
+    </script>
+</body>
+</html>

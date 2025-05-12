@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sprep</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="/dist/styles.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+</head>
+<body class="bg-gray-100 text-black font-sans">
+    <!-- Mobile View Container -->
+    <div class="container min-h-screen flex flex-col items-center justify-center p-4">
+        <div class="w-full max-w-xs bg-white shadow-md rounded-lg p-6">
+            <h1 class="text-2xl font-bold mb-4 text-center">Sprep</h1>
+            <p class="text-lg mb-4 text-center">Create an account</p>
+            <p class="text-sm mb-4 text-center">
+                Login to Sprep: Personalized AI Learning Tutor for Competitive Exam Preparation
+            </p>
+            
+            <!-- Error Message Container -->
+            <div id="errorMessage" class="text-red-500 text-sm mb-4 hidden"></div>
+            
+            <!-- Email input with validation -->
+            <input id="email" class="w-full border rounded-lg p-2 mb-4" type="email" placeholder="email@domain.com" required/>
+            
+            <!-- Password input with validation -->
+            <input id="password" class="w-full border rounded-lg p-2 mb-4" type="password" placeholder="Password" required/>
+            
+            <!-- Forgot password link -->
+            <div class="text-sm text-blue-500 mb-4 text-right">
+                <a href="#">Forgot password?</a>
+            </div>
+
+            <!-- Terms and Conditions checkbox -->
+            <div class="flex items-center mb-4">
+                <input id="terms" type="checkbox" class="mr-2"/>
+                <label for="terms" class="text-xs">
+                    I agree to the 
+                    <a href="T&C.html" class="text-blue-500">Terms of Service & Privacy Policy</a> 
+                </label>
+            </div>
+
+            <!-- Continue button -->
+            <button class="w-full bg-black text-white rounded-lg py-2 mb-4" onclick="validateForm()">Continue</button>
+
+            <p class="text-sm mb-4 text-center">or</p>
+            
+            <!-- Social login buttons -->
+            <button class="w-full border rounded-lg py-2 mb-4 flex items-center justify-center" onclick="handleSignIn()">
+                <i class="fab fa-google mr-2"></i> Continue with Google
+            </button>
+            <button class="w-full border rounded-lg py-2 mb-4 flex items-center justify-center" onclick="handleSignIn()">
+                <i class="fab fa-apple mr-2"></i> Continue with Apple
+            </button>
+            
+            <p class="text-xs text-center">By clicking continue, you agree to our Terms of Service and Privacy Policy</p>
+        </div>
+    </div>
+
+    <script>
+        function validateForm() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const terms = document.getElementById('terms').checked;
+            const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            const errorMessage = document.getElementById('errorMessage');
+
+            // Clear previous error messages
+            errorMessage.innerHTML = '';
+            errorMessage.classList.add('hidden');
+
+            // Validate email
+            if (!emailPattern.test(email)) {
+                errorMessage.innerHTML = 'Please enter a valid email address.';
+                errorMessage.classList.remove('hidden');
+                return false;
+            }
+
+            // Validate password
+            if (password.length < 6) {
+                errorMessage.innerHTML = 'Password should be at least 6 characters.';
+                errorMessage.classList.remove('hidden');
+                return false;
+            }
+
+            // Validate terms and conditions
+            if (!terms) {
+                errorMessage.innerHTML = 'Please agree to the Terms and Conditions.';
+                errorMessage.classList.remove('hidden');
+                return false;
+            }
+
+            // Store the email in localStorage
+            localStorage.setItem('email', email);
+
+            // Redirect to the registration page
+            window.location.href = "registration.html";
+        }
+
+        function handleSignIn() {
+            const email = document.getElementById('email').value.trim();
+            const errorMessage = document.getElementById('errorMessage');
+
+            // Clear previous error messages
+            errorMessage.innerHTML = '';
+            errorMessage.classList.add('hidden');
+
+            // Validate the email
+            if (!email) {
+                errorMessage.innerHTML = 'Please enter your email.';
+                errorMessage.classList.remove('hidden');
+                return;
+            }
+
+            // Store the email in localStorage
+            localStorage.setItem('email', email);
+
+            // Redirect to the profile page
+            window.location.href = "profile.html";
+        }
+
+        function saveSignInData() {
+            const email = document.getElementById('email').value;
+
+            // Save email to localStorage
+            localStorage.setItem('email', email);
+
+            // Redirect to the profile page
+            window.location.href = "profile.html";
+        }
+    </script>
+</body>
+</html>

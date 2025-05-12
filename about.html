@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Sprep</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="/dist/styles.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+        .circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            overflow: hidden;
+            background-color: #f3f4f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .circle:hover {
+            transform: translateY(-10px); /* Float effect */
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2); /* Enhanced shadow */
+        }
+        .circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-900">
+    <!-- Container -->
+    <div class="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-6 mt-8">
+        <!-- Header with Back Button -->
+        <div class="flex items-center mb-6">
+            <i class="fas fa-arrow-left text-xl cursor-pointer" onclick="window.location.href='settings.html'" title="Go Back"></i>
+            <h1 class="text-3xl font-bold text-center flex-grow">📘 About Sprep</h1>
+        </div>
+
+        <!-- About Section -->
+        <p class="text-sm mb-6">
+            Sprep is an AI-powered study app designed to help students learn smarter, track their progress, and prepare effectively for exams — all in one place.
+        </p>
+        <p class="text-sm mb-6">
+            This app was born during AIHACKDAYS 2025, a hackathon conducted by Swecha Telangana. What started as a daring idea by three determined students became a complete solution for students who struggle with disorganized prep and lack of proper guidance.
+        </p>
+
+        <!-- Features Section -->
+        <h2 class="text-2xl font-semibold mb-4">🚀 Features at a Glance</h2>
+        <ul class="list-disc list-inside text-sm space-y-2">
+            <li>📚 Subject Pages: Organized learning spaces for Physics, Chemistry, and Maths.</li>
+            <li>🤖 AI Chatbot: Instant, distraction-free academic assistance.</li>
+            <li>📝 Mock Tests: Timed exams to simulate real pressure and sharpen accuracy.</li>
+            <li>📄 Notes: Simplified, exam-focused content for quick revisions.</li>
+            <li>❓ PYQs & Quizzes: Practice previous year questions and take fast quizzes to strengthen weak spots.</li>
+            <li>🚦 Mistake Tracker: Review and reflect on your common errors.</li>
+            <li>📈 Progress Analytics: Visual progress reports to measure how far you’ve come.</li>
+            <li>🔥 Daily Streak System: Build consistent habits and stay accountable with every login.</li>
+            <li>👤 Personalized Dashboard: Tailored experience based on your journey.</li>
+            <li>🔐 Privacy-First: Only name and email collected. Your learning stays yours.</li>
+        </ul>
+
+        <!-- Developers Section -->
+        <h2 class="text-2xl font-semibold mt-8 mb-4">👩‍💻 Developed By</h2>
+        <div class="flex justify-center space-x-8 mb-6">
+            <!-- Developer 1 -->
+            <div class="text-center">
+                <div class="circle">
+                    <!-- Add image path here -->
+                    <img src= "Sreehitha.jpg" alt="Sreehitha Madiraju">
+                </div>
+                <p class="mt-2 font-semibold">Sreehitha Madiraju</p>
+            </div>
+        </div>
+
+        <!-- From the Developers Section -->
+        <h2 class="text-2xl font-semibold mb-4">💬 From the Developer</h2>
+        <p class="text-sm">
+            "We built Sprep not just to win a hackathon — but to solve a problem we’ve all faced. Confusing resources. Chaotic prep. Zero motivation. So we created something simple, focused, and powerful. Sprep is more than an app — it’s a tool we wish we had from day one."
+        </p>
+    </div>
+</body>
+</html>

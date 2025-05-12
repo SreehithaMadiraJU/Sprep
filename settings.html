@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sprep</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="/dist/styles.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script>
+        function handleLogout() {
+            alert("Your account has been logged out.");
+            if (confirm("Your account has been logged out. Click OK to sign in again.")) {
+                window.location.href = "signin.html";
+            }
+        }
+
+        function redirectToProfile() {
+            window.location.href = "profile.html";
+        }
+
+        // Show or hide theme options
+        function showThemeOptions() {
+            const themeOptions = document.getElementById('themeOptions');
+            themeOptions.classList.toggle('hidden');
+        }
+
+        // Set the theme and save it to localStorage
+        function setTheme(theme) {
+            // Save the selected theme in localStorage
+            localStorage.setItem('theme', theme);
+
+            // Apply the theme immediately
+            applyTheme();
+
+            alert(`Theme changed to ${theme.charAt(0).toUpperCase() + theme.slice(1)} Mode!`);
+        }
+
+        // Apply the theme based on the value in localStorage
+        function applyTheme() {
+            const theme = localStorage.getItem('theme') || 'light'; // Default to light mode
+            if (theme === 'dark') {
+                document.body.classList.add('bg-gray-900', 'text-white');
+                document.body.classList.remove('bg-white', 'text-black');
+            } else {
+                document.body.classList.add('bg-white', 'text-black');
+                document.body.classList.remove('bg-gray-900', 'text-white');
+            }
+        }
+
+        // Apply the theme on page load
+        document.addEventListener('DOMContentLoaded', applyTheme);
+    </script>
+</head>
+<body class="bg-white text-black">
+    <!-- Main Container -->
+    <div class="max-w-md mx-auto h-screen flex flex-col">
+        <!-- Scrollable Content -->
+        <div class="flex-grow overflow-y-auto p-4">
+            <div class="text-center text-lg font-semibold mb-4">Sprep</div>
+            <div class="space-y-4">
+                <a href="#" class="flex items-center justify-between p-4 border-b cursor-pointer" onclick="redirectToProfile()">
+                    <div class="flex items-center">
+                        <i class="fas fa-user mr-2"></i>
+                        <span>Account</span>
+                    </div>
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+                <a href="#" class="flex items-center justify-between p-4 border-b cursor-pointer" onclick="showThemeOptions()">
+                    <div class="flex items-center">
+                        <i class="fas fa-eye mr-2"></i>
+                        <span>Appearance</span>
+                    </div>
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+
+                <!-- Theme Options -->
+                <div id="themeOptions" class="hidden p-4 bg-gray-100 rounded-lg">
+                    <p class="text-gray-500 mb-2">Choose Theme:</p>
+                    <button class="bg-gray-200 p-2 rounded-lg mr-2" onclick="setTheme('light')">Light Mode</button>
+                    <button class="bg-gray-800 text-white p-2 rounded-lg" onclick="setTheme('dark')">Dark Mode</button>
+                </div>
+
+                <a href="privacy.html" class="flex items-center justify-between p-4 border-b cursor-pointer">
+                    <div class="flex items-center">
+                        <i class="fas fa-lock mr-2"></i>
+                        <span>Privacy & Policy</span>
+                    </div>
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+                <a href="#" class="flex items-center justify-between p-4 border-b cursor-pointer">
+                    <div class="flex items-center">
+                        <i class="fas fa-headphones-alt mr-2"></i>
+                        <span>Help and Support</span>
+                    </div>
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+                <a href="about.html" class="flex items-center justify-between p-4 border-b cursor-pointer">
+                    <div class="flex items-center">
+                        <i class="fas fa-info-circle mr-2"></i>
+                        <span>About</span>
+                    </div>
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+                <a href="#" class="flex items-center justify-between p-4 text-red-500 cursor-pointer" onclick="handleLogout()">
+                    <div class="flex items-center">
+                        <i class="fas fa-sign-out-alt mr-2"></i>
+                        <span>Logout</span>
+                    </div>
+                </a>
+
+                <!-- Line between Logout and Delete Account -->
+                <hr class="border-t border-gray-300 my-2">
+
+                <a href="deleteaccount.html" class="flex items-center justify-between p-4 border-b cursor-pointer text-red-500">
+                    <div class="flex items-center">
+                        <i class="fas fa-user-slash mr-2"></i>
+                        <span>Delete Account</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Footer Navigation -->
+        <div class="bg-white shadow-md p-4 flex justify-between items-center">
+            <!-- Play Button -->
+            <a href="maths.html" class="text-xl" title="Lecture">
+                <i class="fas fa-play"></i>
+            </a>
+            
+            <!-- Pencil Button -->
+            <a href="exams.quiz.html" class="text-xl" title="Exams Quiz">
+                <i class="fas fa-pen"></i>
+            </a>
+
+            <!-- Home Button -->
+            <a href="home.html" class="text-xl" title="Home">
+                <i class="fas fa-home"></i>
+            </a>
+            
+            <!-- Notification with a badge -->
+            <a href="mistakes.html" class="relative text-xl">
+                <i class="fas fa-times-circle"></i>
+                <span class="absolute top-0 right-0 transform -translate-y-1/2 translate-x-1/2 bg-red-600 text-white text-xs rounded-full px-1">3</span>
+            </a>
+            
+            <!-- Profile Button -->
+            <a href="profile.html" class="text-xl" title="Profile">
+                <i class="fas fa-user"></i>
+            </a>
+        </div>
+    </div>
+    
+    <script src="https://cdn.botpress.cloud/webchat/v2.2/inject.js"></script>
+    <script src="https://files.bpcontent.cloud/2025/03/23/05/20250323050318-8V76KHTD.js"></script>
+</body>
+</html>

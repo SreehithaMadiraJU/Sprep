@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sprep</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="/dist/styles.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <script>
+        function confirmExit() {
+            if (confirm("Are you sure you want to exit the app?")) {
+                window.open('', '_self', ''); // This line is necessary for some browsers to allow window.close()
+                window.close();
+            }
+        }
+
+        function redirectToSettings() {
+            window.location.href = "settings.html";
+        }
+    </script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+        .scrollable-content {
+            max-height: calc(100vh - 120px); /* Adjust height to leave space for the footer */
+            overflow-y: auto;
+        }
+        #treeContainer {
+            width: 200px;
+            height: 300px;
+            position: relative;
+            background: #c8e6c9;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            margin: 20px auto;
+            cursor: pointer;
+        }
+        .stage {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+        .stage.visible {
+            opacity: 1;
+        }
+        .stage img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        .tick-mark {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 24px;
+            color: green;
+            display: none;
+        }
+        .tick-mark.show {
+            display: block;
+        }
+        #dayCounter, #quote {
+            text-align: center;
+            margin-top: 10px;
+            color: #2e7d32;
+            font-weight: bold;
+        }
+        #quote {
+            font-style: italic;
+            color: #558b2f;
+        }
+        #daysLeftContainer {
+            max-height: none; /* Remove height restriction */
+            overflow-y: auto; /* Add scroll if content overflows */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-black font-sans">
+  <!-- Mobile View Container -->
+  <div class="container min-h-screen flex flex-col items-center justify-between p-4">
+    <!-- Scrollable Content -->
+    <div class="w-full max-w-md bg-white shadow-md rounded-lg p-3">
+            <!-- Header -->
+            <div class="flex justify-between items-center mb-4">
+                <i class="fas fa-arrow-left text-xl cursor-pointer" onclick="confirmExit()"></i>
+                <h1 class="text-xl font-bold">Sprep</h1>
+                <i class="fas fa-cog text-xl cursor-pointer" onclick="redirectToSettings()"></i>
+            </div>
+            <!-- Course Name -->
+            <div class="flex items-center mb-4">
+                <i class="fas fa-circle text-xs mr-2"></i>
+                <span class="mr-2">COURSE NAME</span>
+                <span class="font-bold" id="courseDisplay"></span>
+            </div>
+            <!-- Target Exam -->
+            <div class="flex items-center mb-4">
+                <i class="fas fa-times-circle text-xs mr-2"></i>
+                <span class="mr-2">TARGET EXAM</span>
+                <span id="selectedExamDisplay" class="font-bold"></span>
+            </div>
+            <!-- Days Left for the Exam -->
+            <div class="bg-purple-100 p-4 rounded-lg mb-4">
+                <div class="flex items-center mb-2">
+                    <i class="fas fa-circle text-xs mr-2"></i>
+                    <span class="text-xs">DAYS LEFT FOR THE EXAM</span>
+                </div>
+                <div id="daysLeftContainer" class="text-sm"></div>
+                <div id="approximateTimeContainer" class="text-sm"></div>
+            </div>
+            <!-- Tree Streak Tracker -->
+            <h1 class="text-2xl font-bold text-green-700 text-center">🌳 Tree Streak Tracker</h1>
+            <div id="treeContainer" onclick="markTodayTouched()">
+                <span class="tick-mark" id="tickMark">✔</span>
+                <div class="stage" id="stage1"><img src="https://em-content.zobj.net/thumbs/120/apple/354/seedling_1f331.png"></div>
+                <div class="stage" id="stage2"><img src="https://em-content.zobj.net/thumbs/120/apple/354/herb_1f33f.png"></div>
+                <div class="stage" id="stage3"><img src="https://em-content.zobj.net/thumbs/120/apple/354/deciduous-tree_1f333.png"></div>
+                <div class="stage" id="stage4"><img src="https://em-content.zobj.net/thumbs/120/apple/354/deciduous-tree_1f333.png"></div>
+                <div class="stage" id="stage5"><img src="https://em-content.zobj.net/thumbs/120/apple/354/tulip_1f337.png"></div>
+                <div class="stage" id="stage6"><img src="https://em-content.zobj.net/thumbs/120/apple/354/palm-tree_1f334.png"></div>
+                <div class="stage" id="stage7"><img src="https://em-content.zobj.net/thumbs/120/apple/354/evergreen-tree_1f332.png"></div>
+                <div class="stage" id="stage8"><img src="https://em-content.zobj.net/thumbs/120/apple/354/tree_1f333.png"></div>
+                <div class="stage" id="stage9"><img src="https://em-content.zobj.net/thumbs/120/apple/354/deciduous-tree_1f333.png"></div>
+                <div class="stage" id="stage10"><img src="https://em-content.zobj.net/thumbs/120/apple/354/christmas-tree_1f384.png"></div>
+            </div>
+            <div id="dayCounter"></div>
+            <div id="quote"></div>
+        </div>
+
+        <!-- Box for Navigation -->
+        <div class="w-full max-w-md bg-white rounded-lg shadow-md p-4 mt-4">
+            <!-- Navigation Bar -->
+            <nav class="flex justify-around items-center">
+                <!-- Play Button -->
+                <a href="maths.html" class="text-xl" title="Lecture">
+                    <i class="fas fa-play"></i>
+                </a>
+                <!-- Pencil Button -->
+                <a href="exams.quiz.html" class="text-xl" title="Exams Quiz">
+                    <i class="fas fa-pen"></i>
+                </a>
+                <!-- Home Button -->
+                <a href="home.html" class="text-xl" title="Home">
+                    <i class="fas fa-home"></i>
+                </a>
+                <!-- Notification with a badge -->
+                <a href="mistakes.html" class="relative text-xl">
+                    <i class="fas fa-times-circle"></i>
+                    <span class="absolute top-0 right-0 transform -translate-y-1/2 translate-x-1/2 bg-red-600 text-white text-xs rounded-full px-1">3</span>
+                </a>
+                <!-- Profile Button -->
+                <a href="profile.html" class="text-xl" title="Profile">
+                    <i class="fas fa-user"></i>
+                </a>
+            </nav>
+        </div>
+    </div>
+
+    <script>
+        const IST_OFFSET = 5.5 * 60; // IST in minutes
+        const treeContainer = document.getElementById("treeContainer");
+        const tickMark = document.getElementById("tickMark");
+
+        const quotes = [
+            "A tiny seed today, a forest tomorrow!",
+            "Keep growing 🌱",
+            "Roots run deep when you stay consistent!",
+            "You're branching out beautifully!",
+            "Sunshine or rain, you grow anyway.",
+            "Just like that tree, you’re unstoppable!",
+            "Another ring on the tree of success!",
+            "Almost there, green warrior!",
+            "Tall, proud, and rooted. That’s you!",
+            "Your tree is now a festive miracle 🎄!"
+        ];
+
+        function getISTDateString() {
+            const now = new Date();
+            const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+            const istTime = new Date(utc + (IST_OFFSET * 60000));
+            return istTime.toISOString().split("T")[0]; // YYYY-MM-DD
+        }
+
+        function markTodayTouched() {
+            const today = getISTDateString();
+            const streakData = JSON.parse(localStorage.getItem("streakData") || "{}");
+
+            if (!streakData.startDate) {
+                streakData.startDate = today;
+            }
+
+            streakData.touchedDays = streakData.touchedDays || {};
+            streakData.touchedDays[today] = true;
+
+            localStorage.setItem("streakData", JSON.stringify(streakData));
+            updateTree();
+        }
+
+        function updateTree() {
+            const today = getISTDateString();
+            const streakData = JSON.parse(localStorage.getItem("streakData") || "{}");
+
+            const touchedDays = streakData.touchedDays || {};
+            const startDate = new Date(streakData.startDate);
+            const currentDate = new Date(today);
+            const dayDiff = Math.floor((currentDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
+
+            let visibleDay = 1;
+
+            for (let i = 1; i <= 10; i++) {
+                document.getElementById(`stage${i}`).classList.remove("visible");
+            }
+
+            for (let i = 1; i <= Math.min(dayDiff, 10); i++) {
+                const date = new Date(startDate);
+                date.setDate(date.getDate() + i - 1);
+                const dateStr = date.toISOString().split("T")[0];
+
+                if (touchedDays[dateStr]) {
+                    visibleDay = i;
+                } else {
+                    visibleDay = Math.max(1, i - 1); // stop growing if not touched
+                    break;
+                }
+            }
+
+            document.getElementById(`stage${visibleDay}`).classList.add("visible");
+            document.getElementById("dayCounter").textContent = `Day ${visibleDay} of your streak`;
+            document.getElementById("quote").textContent = quotes[visibleDay - 1] || "";
+
+            if (touchedDays[today]) {
+                tickMark.classList.add("show");
+            } else {
+                tickMark.classList.remove("show");
+            }
+        }
+
+        // Add event listener to the tree container for the click behavior
+        treeContainer.addEventListener("click", () => {
+            if (!tickMark.classList.contains("show")) {
+                tickMark.classList.add("show"); // Show the tick mark
+                markTodayTouched(); // Start the tree growth
+            }
+        });
+
+        // Retrieve the selected exam from localStorage
+        const selectedExam = localStorage.getItem('selectedExam');
+        console.log(localStorage.getItem("selectedExam"));
+
+        // Display the selected exam on the home page
+        window.onload = () => {
+            // Retrieve the selected course from localStorage
+            const selectedCourse = localStorage.getItem('selectedCourse');
+            if (selectedCourse) {
+                document.getElementById('courseDisplay').textContent = selectedCourse;
+            } else {
+                alert("No course selected. Please go back to the registration page.");
+                window.location.href = "registration.html";
+            }
+
+            // Retrieve the selected exams from localStorage
+            const selectedExams = JSON.parse(localStorage.getItem('selectedExam')) || [];
+            if (selectedExams.length > 0) {
+                document.getElementById('selectedExamDisplay').textContent = selectedExams.join(', ');
+            } else {
+                alert("No exam selected. Please go back to the registration page.");
+                window.location.href = "registration.html";
+            }
+
+            // Update the days left for exams
+            updateDaysLeft();
+
+            if (!localStorage.getItem("streakData")) {
+                // Initialize the streak data if not started
+                const streakData = { startDate: getISTDateString(), touchedDays: {} };
+                localStorage.setItem("streakData", JSON.stringify(streakData));
+            }
+            updateTree(); // Update the tree based on the streak data
+
+            const selectedClass = localStorage.getItem("selectedClass");
+            if (selectedClass) {
+                handleClassSelection(selectedClass);
+            }
+
+            localStorage.setItem("selectedExam", JSON.stringify(["JEE Mains", "BITSAT", "CUET-UG", "TS EAPCET", "AP EAPCET", "NEET-UG"]));
+        };
+
+        function updateDaysLeft() {
+            const selectedExams = JSON.parse(localStorage.getItem("selectedExam")) || [];
+            const selectedClass = localStorage.getItem("selectedClass");
+            const daysContainer = document.getElementById("daysLeftContainer");
+
+            // Map of localStorage names to examData keys
+            const examMapping = {
+                "JEE Mains": "JEE Main (April)",
+                "JEE Advanced": "JEE Advanced"
+            };
+
+            // Clear the container
+            daysContainer.innerHTML = "";
+
+            // Determine which data to use based on the selected class
+            const examData = selectedClass === "11" ? class11ExamData : class12ExamData;
+
+            // Iterate over selected exams and display their days left
+            selectedExams.forEach((exam) => {
+                const mappedExam = examMapping[exam] || exam; // Map to correct key or use exam as fallback
+                const matchingExam = Object.keys(examData).find(
+                    (key) => key.trim().toLowerCase() === mappedExam.trim().toLowerCase()
+                );
+                if (matchingExam) {
+                    const examInfo = examData[matchingExam];
+                    const examElement = document.createElement("div");
+                    examElement.className = "mb-2";
+                    examElement.innerHTML = `<strong>${matchingExam}:</strong> ${
+                        examInfo.date ? `${examInfo.date} (${examInfo.daysLeft} days left)` : `${examInfo.daysLeft} days left`
+                    }`;
+                    daysContainer.appendChild(examElement);
+                } else {
+                    console.warn(`No matching data found for selected exam: ${exam}`);
+                }
+            });
+        }
+
+        const class11ExamData = {
+            "JEE Main (April)": { date: "Early April 2026", daysLeft: 360 },
+            "NEET-UG": { date: "2nd Sunday of May 2026", daysLeft: 395 },
+            "JEE Advanced": { date: "Last Sunday of May 2026", daysLeft: 410 },
+            "BITSAT (Session 1)": { date: "3rd–4th week of May 2026", daysLeft: 400 },
+            "CUET-UG": { date: "Mid to Late May 2026", daysLeft: "395–405" },
+            "TS EAPCET": { date: "1st week of May 2026", daysLeft: 385 },
+            "AP EAPCET": { date: "2nd–3rd week of May 2026", daysLeft: "390–395" },
+        };
+
+        const class12ExamData = {
+            "TS EAPCET": { daysLeft: 25 },
+            "AP EAPCET": { daysLeft: 45 },
+            "JEE Mains": { daysLeft: 0 },
+            "JEE Advanced": { daysLeft: 55 },
+            "NEET-UG": { daysLeft: 25 },
+            "BITSAT": { daysLeft: 50 },
+            "CUET-UG": { daysLeft: 55 },
+        };
+
+        // Handle Class Selection
+        function handleClassSelection(selectedClass) {
+            const daysLeftContainer = document.getElementById("daysLeftContainer");
+            const approximateTimeContainer = document.getElementById("approximateTimeContainer");
+            const selectedExams = JSON.parse(localStorage.getItem("selectedExam")) || [];
+
+            // Clear previous content
+            daysLeftContainer.innerHTML = "";
+            approximateTimeContainer.innerHTML = "";
+
+            const examData = selectedClass === "11" ? class11ExamData : class12ExamData;
+
+            // Iterate over selected exams and display their days left
+            selectedExams.forEach((exam) => {
+                const matchingExam = Object.keys(examData).find(
+                    (key) => key.trim().toLowerCase() === exam.trim().toLowerCase()
+                );
+                if (matchingExam) {
+                    const examInfo = examData[matchingExam];
+                    const examElement = document.createElement("div");
+                    examElement.className = "mb-2";
+                    examElement.innerHTML = `<strong>${matchingExam}:</strong> ${
+                        examInfo.date ? `${examInfo.date} (${examInfo.daysLeft} days left)` : `${examInfo.daysLeft} days left`
+                    }`;
+                    daysLeftContainer.appendChild(examElement);
+                } else {
+                    // Log unmatched exams for debugging
+                    console.warn(`No matching data found for selected exam: ${exam}`);
+                }
+            });
+
+            if (selectedClass === "11") {
+                approximateTimeContainer.style.display = "block"; // Show approximate time section
+            } else {
+                approximateTimeContainer.style.display = "none"; // Hide approximate time section
+            }
+        }
+
+        // Handle Course Selection
+        function handleCourseSelection(selectedCourse) {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach((checkbox) => {
+                checkbox.disabled = false; // Enable all checkboxes initially
+                checkbox.checked = false; // Uncheck all checkboxes initially
+            });
+
+            if (selectedCourse === "MPC") {
+                document.getElementById("neetUg").disabled = true; // Disable NEET-UG for MPC
+            } else if (selectedCourse === "BiPC") {
+                checkboxes.forEach((checkbox) => {
+                    if (checkbox.id !== "neetUg" && checkbox.id !== "tsEapcet" && checkbox.id !== "apEapcet") {
+                        checkbox.disabled = true; // Disable all except NEET-UG, TS EAPCET, AP EAPCET
+                    }
+                });
+            }
+        }
+
+        // Handle Continue Button Click
+        function continueToHome() {
+            const selectedClass = document.querySelector('input[name="class"]:checked').value;
+            const selectedCourse = document.querySelector('input[name="course"]:checked').value;
+            const selectedExams = Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(
+                (checkbox) => checkbox.nextElementSibling.textContent
+            );
+
+            if (!selectedClass || !selectedCourse || selectedExams.length === 0) {
+                alert("Please select a class, course, and at least one exam before proceeding.");
+                return;
+            }
+
+            // Store selections in localStorage
+            localStorage.setItem("selectedClass", selectedClass);
+            localStorage.setItem("selectedCourse", selectedCourse);
+            localStorage.setItem("selectedExam", JSON.stringify(selectedExams));
+
+            // Redirect to home page
+            window.location.href = "home.html";
+        }
+    </script>
+    <script>
+        let selectedCourse = '';
+        let selectedClass = '';
+        function selectCourse(course) {
+            selectedCourse = course;
+            document.querySelectorAll('#courseMPC, #courseBIPC, #courseMBIPC').forEach(button => {
+                button.classList.remove('bg-gray-300');
+            });
+            document.getElementById(`course${course}`).classList.add('bg-gray-300');
+            updateCheckboxes();
+        }
+        function selectClass(className) {
+            selectedClass = className;
+            document.querySelectorAll('#class11, #class12, #classDropper').forEach(button => {
+                button.classList.remove('bg-gray-300');
+            });
+            document.getElementById(`class${className}`).classList.add('bg-gray-300');
+        }
+        function updateCheckboxes() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.disabled = false;
+                checkbox.checked = false;
+            });
+            if (selectedCourse === 'MPC') {
+                document.getElementById('neetUg').disabled = true; // Disable NEET-UG for MPC
+            } else if (selectedCourse === 'BIPC') {
+                checkboxes.forEach(checkbox => {
+                    if (checkbox.id !== 'neetUg' && checkbox.id !== 'tsEapcet' && checkbox.id !== 'apEapcet') {
+                        checkbox.disabled = true; // Disable all except NEET-UG, TS EAPCET, AP EAPCET
+                    }
+                });
+            }
+        }
+        function continueToHome() {
+            // Get all selected exams (use labels instead of IDs)
+            const selectedExams = Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(checkbox => {
+                return checkbox.nextElementSibling.textContent; // Get the label text
+            });
+            // Check if at least one exam is selected
+            if (selectedExams.length === 0) {
+                alert("Please select at least one exam before proceeding.");
+                return; // Stop execution if no exam is selected
+            }
+            // Store the selected exams in localStorage
+            localStorage.setItem('selectedExam', JSON.stringify(selectedExams)); // Store as a JSON string
+            // Redirect to the home page
+            window.location.href = "home.html";
+        }
+    </script>
+    <script>
+        // Apply the theme based on the value in localStorage
+        function applyTheme() {
+            const theme = localStorage.getItem('theme') || 'light'; // Default to light mode
+            if (theme === 'dark') {
+                document.body.classList.add('bg-gray-900', 'text-white');
+                document.body.classList.remove('bg-white', 'text-black');
+            } else {
+                document.body.classList.add('bg-white', 'text-black');
+                document.body.classList.remove('bg-gray-900', 'text-white');
+            }
+        }
+        // Apply the theme on page load
+        document.addEventListener('DOMContentLoaded', applyTheme);
+    </script>
+    <script src="https://cdn.botpress.cloud/webchat/v2.2/inject.js"></script>
+    <script src="https://files.bpcontent.cloud/2025/03/23/05/20250323050318-8V76KHTD.js"></script>
+</body>
+</html>

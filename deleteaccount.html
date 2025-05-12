@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Account</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="/dist/styles.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-900">
+    <!-- Container -->
+    <div class="max-w-3xl mx-auto bg-white shadow-md rounded-lg p-6 mt-8">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-6">
+            <i class="fas fa-arrow-left text-xl cursor-pointer" onclick="window.location.href='settings.html'" title="Go Back"></i>
+            <h1 class="text-2xl font-bold text-center flex-grow">🗑️ Delete Account Policy</h1>
+        </div>
+
+        <!-- Content -->
+        <div class="space-y-6">
+            <h2 class="text-lg font-semibold">🔐 Account Deletion Conditions:</h2>
+            <ul class="list-disc list-inside text-sm">
+                <li>The request is made by the account holder through the official Delete Account option in the app settings.</li>
+                <li>The user has no pending activities such as:
+                    <ul class="list-disc list-inside ml-6">
+                        <li>Ongoing mock tests</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <p class="text-sm text-red-500 font-semibold">
+                ⚠️ Note: Deleted accounts cannot be recovered. All your progress, notes, saved questions, tasks, and account data will be permanently erased from our servers.
+            </p>
+
+            <h2 class="text-lg font-semibold">✅ Deletion Confirmation Steps:</h2>
+            <ol class="list-decimal list-inside text-sm">
+                <li>User Request: Tap "Delete My Account".</li>
+                <li>Password Verification: For security, re-enter your password.</li>
+                <li>Final Prompt: You’ll be shown a confirmation screen that says:
+                    <p class="italic text-sm mt-2">
+                        ❗ “Are you sure you want to delete your Sprep account? This action is irreversible. All your data including test history, saved notes, and progress will be permanently lost.”
+                    </p>
+                </li>
+            </ol>
+
+            <h2 class="text-lg font-semibold">📌 Important Notes:</h2>
+            <ul class="list-disc list-inside text-sm">
+                <li>Data backup is not provided after deletion.</li>
+                <li>If you just want to take a break, consider using the "Deactivate Account" feature (coming soon).</li>
+                <li>If deletion was accidental, contact support within 24 hours with the subject line: “URGENT: Account Deletion Recovery Request.”</li>
+            </ul>
+        </div>
+
+        <!-- Delete Account Button -->
+        <div class="mt-8">
+            <button id="deleteAccountBtn" class="bg-red-500 text-white w-full py-3 rounded-lg text-lg font-semibold hover:bg-red-600">
+                Delete My Account
+            </button>
+        </div>
+
+        <!-- Password Confirmation Modal -->
+        <div id="passwordModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <div class="bg-white rounded-lg p-6 w-96">
+                <h2 class="text-lg font-semibold mb-4">Enter Your Password</h2>
+                <input type="password" id="passwordInput" class="w-full p-3 border rounded-lg mb-4" placeholder="Enter your password">
+                <button id="confirmDeleteBtn" class="bg-red-500 text-white w-full py-3 rounded-lg text-lg font-semibold hover:bg-red-600">
+                    Confirm Deletion
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Handle Delete Account Button Click
+        document.getElementById('deleteAccountBtn').addEventListener('click', function () {
+            const warningMessage = document.createElement('div');
+            warningMessage.id = 'deleteWarning';
+            warningMessage.className = 'text-red-500 bg-gray-100 p-4 rounded-lg mb-4';
+            warningMessage.innerHTML = `
+                ❗ Are you sure you want to delete your Sprep account? This action is irreversible. All your data including test history, saved notes, and progress will be permanently lost.
+                <div class="flex justify-center mt-4 space-x-4">
+                    <button id="confirmYesBtn" class="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600">Yes</button>
+                    <button id="confirmNoBtn" class="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600">No</button>
+                </div>
+            `;
+
+            const container = document.querySelector('.max-w-3xl.mx-auto.bg-white');
+            if (!document.getElementById('deleteWarning')) {
+                container.insertBefore(warningMessage, container.firstChild);
+            }
+
+            // Handle "Yes" Button Click
+            document.getElementById('confirmYesBtn').addEventListener('click', function () {
+                document.getElementById('passwordModal').classList.remove('hidden');
+            });
+
+            // Handle "No" Button Click
+            document.getElementById('confirmNoBtn').addEventListener('click', function () {
+                window.location.href = 'settings.html';
+            });
+        });
+
+        // Handle Confirm Deletion Button Click
+        document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
+            const password = document.getElementById('passwordInput').value;
+            if (password.trim() === '') {
+                const passwordWarning = document.createElement('div');
+                passwordWarning.id = 'passwordWarning';
+                passwordWarning.className = 'text-red-500 bg-gray-100 p-4 rounded-lg mb-4';
+                passwordWarning.innerText = "Please enter your password.";
+
+                const modal = document.getElementById('passwordModal').querySelector('.bg-white');
+                if (!document.getElementById('passwordWarning')) {
+                    modal.insertBefore(passwordWarning, modal.firstChild);
+                }
+                return;
+            }
+
+            const successMessage = document.createElement('div');
+            successMessage.id = 'deleteSuccess';
+            successMessage.className = 'text-green-500 bg-gray-100 p-4 rounded-lg mb-4';
+            successMessage.innerText = "Your account has been deleted.";
+
+            const container = document.querySelector('.max-w-3xl.mx-auto.bg-white');
+            if (!document.getElementById('deleteSuccess')) {
+                container.insertBefore(successMessage, container.firstChild);
+            }
+
+            setTimeout(() => {
+                window.location.href = 'signin.html';
+            }, 3000);
+        });
+    </script>
+</body>
+</html>
