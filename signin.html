@@ -5,130 +5,262 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sprep</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="/dist/styles.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f3f4f6;
+      color: #111;
+    }
+
+    /* ── Page shell ── */
+    .page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    /* ── Card ── */
+    .card {
+      background: #fff;
+      border-radius: 1rem;
+      box-shadow: 0 4px 24px rgba(0,0,0,.10);
+      padding: 2.5rem 2rem;
+      width: 100%;
+      max-width: 420px;   /* comfortable on desktop */
+    }
+
+    /* ── Typography ── */
+    .card h1  { font-size: 1.75rem; font-weight: 700; text-align: center; margin: 0 0 .25rem; }
+    .card .subtitle { font-size: 1.1rem; text-align: center; margin: 0 0 .5rem; }
+    .card .description { font-size: .85rem; text-align: center; color: #555; margin: 0 0 1.25rem; line-height: 1.4; }
+
+    /* ── Inputs ── */
+    .field {
+      width: 100%;
+      border: 1px solid #d1d5db;
+      border-radius: .6rem;
+      padding: .65rem .85rem;
+      font-size: .95rem;
+      margin-bottom: 1rem;
+      outline: none;
+      transition: border-color .2s;
+    }
+    .field:focus { border-color: #111; }
+
+    /* ── Error ── */
+    .error {
+      color: #dc2626;
+      font-size: .82rem;
+      margin-bottom: .75rem;
+      display: none;
+    }
+
+    /* ── Forgot password ── */
+    .forgot { text-align: right; margin-bottom: 1rem; }
+    .forgot a { font-size: .82rem; color: #2563eb; text-decoration: none; }
+    .forgot a:hover { text-decoration: underline; }
+
+    /* ── Terms ── */
+    .terms { display: flex; align-items: flex-start; gap: .5rem; margin-bottom: 1.1rem; }
+    .terms input[type=checkbox] { margin-top: 2px; flex-shrink: 0; }
+    .terms label { font-size: .78rem; line-height: 1.4; }
+    .terms a { color: #2563eb; text-decoration: none; }
+    .terms a:hover { text-decoration: underline; }
+
+    /* ── Buttons ── */
+    .btn-primary {
+      width: 100%;
+      background: #111;
+      color: #fff;
+      border: none;
+      border-radius: .6rem;
+      padding: .7rem;
+      font-size: .95rem;
+      cursor: pointer;
+      margin-bottom: 1rem;
+      transition: background .2s;
+    }
+    .btn-primary:hover { background: #333; }
+
+    .divider { text-align: center; font-size: .85rem; color: #888; margin-bottom: 1rem; }
+
+    .btn-social {
+      width: 100%;
+      background: #fff;
+      border: 1px solid #d1d5db;
+      border-radius: .6rem;
+      padding: .65rem;
+      font-size: .9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .5rem;
+      margin-bottom: .75rem;
+      transition: background .15s;
+    }
+    .btn-social:hover { background: #f9fafb; }
+
+    .footer-note { font-size: .72rem; text-align: center; color: #888; margin-top: .25rem; line-height: 1.4; }
+
+    /* ── Responsive tweaks ── */
+
+    /* Tablet (≥ 640 px) */
+    @media (min-width: 640px) {
+      .card { padding: 3rem 2.75rem; }
+      .card h1  { font-size: 2rem; }
+    }
+
+    /* Desktop (≥ 1024 px): two-column layout */
+    @media (min-width: 1024px) {
+      .page {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0;
+        padding: 0;
+      }
+
+      /* Left decorative panel */
+      .hero {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: #111;
+        color: #fff;
+        min-height: 100vh;
+        padding: 3rem;
+        text-align: center;
+      }
+      .hero h2 { font-size: 2.4rem; font-weight: 700; margin: 0 0 1rem; line-height: 1.2; }
+      .hero p  { font-size: 1rem; color: #aaa; max-width: 340px; line-height: 1.6; }
+      .hero-icon { font-size: 3.5rem; margin-bottom: 1.5rem; }
+
+      /* Right card panel */
+      .card-panel {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        background: #f3f4f6;
+        padding: 2rem;
+      }
+
+      .card { max-width: 400px; }
+    }
+  </style>
 </head>
-<body class="bg-gray-100 text-black font-sans">
-    <!-- Mobile View Container -->
-    <div class="container min-h-screen flex flex-col items-center justify-center p-4">
-        <div class="w-full max-w-xs bg-white shadow-md rounded-lg p-6">
-            <h1 class="text-2xl font-bold mb-4 text-center">Sprep</h1>
-            <p class="text-lg mb-4 text-center">Create an account</p>
-            <p class="text-sm mb-4 text-center">
-                Login to Sprep: Personalized AI Learning Tutor for Competitive Exam Preparation
-            </p>
-            
-            <!-- Error Message Container -->
-            <div id="errorMessage" class="text-red-500 text-sm mb-4 hidden"></div>
-            
-            <!-- Email input with validation -->
-            <input id="email" class="w-full border rounded-lg p-2 mb-4" type="email" placeholder="email@domain.com" required/>
-            
-            <!-- Password input with validation -->
-            <input id="password" class="w-full border rounded-lg p-2 mb-4" type="password" placeholder="Password" required/>
-            
-            <!-- Forgot password link -->
-            <div class="text-sm text-blue-500 mb-4 text-right">
-                <a href="#">Forgot password?</a>
-            </div>
+<body>
 
-            <!-- Terms and Conditions checkbox -->
-            <div class="flex items-center mb-4">
-                <input id="terms" type="checkbox" class="mr-2"/>
-                <label for="terms" class="text-xs">
-                    I agree to the 
-                    <a href="T&C.html" class="text-blue-500">Terms of Service & Privacy Policy</a> 
-                </label>
-            </div>
+  <div class="page">
 
-            <!-- Continue button -->
-            <button class="w-full bg-black text-white rounded-lg py-2 mb-4" onclick="validateForm()">Continue</button>
-
-            <p class="text-sm mb-4 text-center">or</p>
-            
-            <!-- Social login buttons -->
-            <button class="w-full border rounded-lg py-2 mb-4 flex items-center justify-center" onclick="handleSignIn()">
-                <i class="fab fa-google mr-2"></i> Continue with Google
-            </button>
-            <button class="w-full border rounded-lg py-2 mb-4 flex items-center justify-center" onclick="handleSignIn()">
-                <i class="fab fa-apple mr-2"></i> Continue with Apple
-            </button>
-            
-            <p class="text-xs text-center">By clicking continue, you agree to our Terms of Service and Privacy Policy</p>
-        </div>
+    <!-- Hero panel — only visible on desktop (hidden on mobile/tablet via CSS) -->
+    <div class="hero" id="hero">
+      <div class="hero-icon">🎓</div>
+      <h2>Ace your next exam with Sprep</h2>
+      <p>Personalized AI-driven prep plans, practice tests, and instant feedback — all in one place.</p>
     </div>
 
-    <script>
-        function validateForm() {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const terms = document.getElementById('terms').checked;
-            const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-            const errorMessage = document.getElementById('errorMessage');
+    <!-- Card panel wrapper (needed for desktop flex centering) -->
+    <div class="card-panel" id="cardPanel">
+      <div class="card">
+        <h1>Sprep</h1>
+        <p class="subtitle">Create an account</p>
+        <p class="description">Login to Sprep: Personalized AI Learning Tutor for Competitive Exam Preparation</p>
 
-            // Clear previous error messages
-            errorMessage.innerHTML = '';
-            errorMessage.classList.add('hidden');
+        <!-- Error -->
+        <div id="errorMessage" class="error"></div>
 
-            // Validate email
-            if (!emailPattern.test(email)) {
-                errorMessage.innerHTML = 'Please enter a valid email address.';
-                errorMessage.classList.remove('hidden');
-                return false;
-            }
+        <!-- Email -->
+        <input id="email" class="field" type="email" placeholder="email@domain.com" required/>
 
-            // Validate password
-            if (password.length < 6) {
-                errorMessage.innerHTML = 'Password should be at least 6 characters.';
-                errorMessage.classList.remove('hidden');
-                return false;
-            }
+        <!-- Password -->
+        <input id="password" class="field" type="password" placeholder="Password" required/>
 
-            // Validate terms and conditions
-            if (!terms) {
-                errorMessage.innerHTML = 'Please agree to the Terms and Conditions.';
-                errorMessage.classList.remove('hidden');
-                return false;
-            }
+        <!-- Forgot password -->
+        <div class="forgot"><a href="#">Forgot password?</a></div>
 
-            // Store the email in localStorage
-            localStorage.setItem('email', email);
+        <!-- Terms -->
+        <div class="terms">
+          <input id="terms" type="checkbox"/>
+          <label for="terms">
+            I agree to the
+            <a href="T&C.html">Terms of Service &amp; Privacy Policy</a>
+          </label>
+        </div>
 
-            // Redirect to the registration page
-            window.location.href = "registration.html";
-        }
+        <!-- Continue -->
+        <button class="btn-primary" onclick="validateForm()">Continue</button>
 
-        function handleSignIn() {
-            const email = document.getElementById('email').value.trim();
-            const errorMessage = document.getElementById('errorMessage');
+        <div class="divider">or</div>
 
-            // Clear previous error messages
-            errorMessage.innerHTML = '';
-            errorMessage.classList.add('hidden');
+        <!-- Social -->
+        <button class="btn-social" onclick="handleSignIn()">
+          <i class="fab fa-google"></i> Continue with Google
+        </button>
+        <button class="btn-social" onclick="handleSignIn()">
+          <i class="fab fa-apple"></i> Continue with Apple
+        </button>
 
-            // Validate the email
-            if (!email) {
-                errorMessage.innerHTML = 'Please enter your email.';
-                errorMessage.classList.remove('hidden');
-                return;
-            }
+        <p class="footer-note">By clicking continue, you agree to our Terms of Service and Privacy Policy</p>
+      </div>
+    </div>
 
-            // Store the email in localStorage
-            localStorage.setItem('email', email);
+  </div>
 
-            // Redirect to the profile page
-            window.location.href = "profile.html";
-        }
+  <script>
+    /* ── Hide hero panel on small screens ── */
+    function adjustLayout() {
+      const hero = document.getElementById('hero');
+      if (window.innerWidth < 1024) {
+        hero.style.display = 'none';
+      } else {
+        hero.style.display = 'flex';
+      }
+    }
+    adjustLayout();
+    window.addEventListener('resize', adjustLayout);
 
-        function saveSignInData() {
-            const email = document.getElementById('email').value;
+    /* ── Form logic (unchanged) ── */
+    function showError(msg) {
+      const el = document.getElementById('errorMessage');
+      el.textContent = msg;
+      el.style.display = 'block';
+    }
+    function clearError() {
+      const el = document.getElementById('errorMessage');
+      el.textContent = '';
+      el.style.display = 'none';
+    }
 
-            // Save email to localStorage
-            localStorage.setItem('email', email);
+    function validateForm() {
+      clearError();
+      const email    = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const terms    = document.getElementById('terms').checked;
+      const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-            // Redirect to the profile page
-            window.location.href = "profile.html";
-        }
-    </script>
+      if (!emailPattern.test(email))  return showError('Please enter a valid email address.');
+      if (password.length < 6)        return showError('Password should be at least 6 characters.');
+      if (!terms)                     return showError('Please agree to the Terms and Conditions.');
+
+      localStorage.setItem('email', email);
+      window.location.href = 'registration.html';
+    }
+
+    function handleSignIn() {
+      clearError();
+      const email = document.getElementById('email').value.trim();
+      if (!email) return showError('Please enter your email.');
+      localStorage.setItem('email', email);
+      window.location.href = 'profile.html';
+    }
+  </script>
 </body>
 </html>
